@@ -4,6 +4,7 @@ using Asp.Versioning.ApiExplorer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -77,6 +78,10 @@ builder.Services.AddSwaggerGen(options =>
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+// 🧩 Injeção de dependência dos serviços personalizados
+builder.Services.AddSingleton<TokenService>();
+builder.Services.AddSingleton<RefreshTokenStore>();
 
 var app = builder.Build();
 
