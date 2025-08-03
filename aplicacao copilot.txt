@@ -1,0 +1,12 @@
+Crie uma aplicação em c# .net9 com 3 projetos, sendo: 
+1-Projeto webapi com controllers e filters que usa autenticação e autorização com jwt 
+2-Projeto de comnínio onde ficarão as regras de negócio e as entidades assim como as interfaces 
+3-Projeto de data, onde estarão os repositórios e as queries que serão executadas no banco de dados. 
+Para conexão com banco de dados serão utilizados EFCore e Dapper. 
+O projeto será criado via prompt no VSCode Também é necessario gerar o workflow no github para fazer deploy automático para o aplicativo que ficará na azure. 
+Aplicação deve ter um endpoint de login que não exija token e deve ter também um mecanismo de refresh token.
+Criar também um filter para substituir o modelstatevalidator padrão e desabilitar o padrão na program.cs
+As controllers não devem acessar os repositórios, o fluxo deve ser Controller -> Service -> Repository.
+Implementar um middleware para validar o token jwt.
+Configure o swagger e o versionamento da api para pegar a versão das controllers para montar os endpoints.
+Todos os retornos devem retornar um objeto (Ok) em todas as requests com as propriedades: status (HttpStatusCode), mensagem (string), data (object)
