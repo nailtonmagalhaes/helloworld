@@ -11,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+
 // 🔐 JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -21,10 +23,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = "JwtVersionedApi",
-            ValidAudience = "JwtVersionedApiClient",
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes("super-secret-key-12345"))
+            ValidIssuer = jwtSettings["Issuer"],
+            ValidAudience = jwtSettings["Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]!))
         };
     });
 
@@ -48,7 +49,7 @@ builder.Services.AddSwaggerGen(options =>
 
     foreach (var description in provider.ApiVersionDescriptions)
     {
-        options.SwaggerDoc(description.GroupName, new Microsoft.OpenApi.Models.OpenApiInfo
+        options.SwaggerDoc(description.GroupName, new OpenApiInfo
         {
             Title = $"Minha API - {description.ApiVersion}",
             Version = description.ApiVersion.ToString()

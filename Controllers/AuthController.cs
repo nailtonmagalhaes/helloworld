@@ -14,10 +14,12 @@ namespace helloworld.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly ILogger<AuthController> _logger;
+    private readonly IConfiguration _configuration;
 
-    public AuthController(ILogger<AuthController> logger)
+    public AuthController(ILogger<AuthController> logger, IConfiguration configuration)
     {
         _logger = logger;
+        _configuration = configuration;
     }
 
     [HttpPost("login")]
@@ -32,12 +34,12 @@ public class AuthController : ControllerBase
             new Claim(ClaimTypes.Name, model.Username)
         };
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("super-secret-key-12345"));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: "JwtVersionedApi",
-            audience: "JwtVersionedApiClient",
+            issuer: _configuration["Jwt:Issuer"],
+            audience: _configuration["Jwt:Audience"],
             claims: claims,
             expires: DateTime.Now.AddMinutes(30),
             signingCredentials: creds);
