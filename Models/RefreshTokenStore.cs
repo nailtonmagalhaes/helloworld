@@ -1,6 +1,6 @@
 public class RefreshTokenStore
 {
-    private static Dictionary<string, string> _store = new();
+    private static Dictionary<string, string> _store = [];
 
     public void Save(string userId, string refreshToken)
     {

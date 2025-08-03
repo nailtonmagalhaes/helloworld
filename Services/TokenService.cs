@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Services;
+
 public class TokenService
 {
     private readonly IConfiguration _config;
@@ -14,11 +15,15 @@ public class TokenService
         _config = config;
     }
 
-    public string GenerateAccessToken(string userId)
+    public string GenerateAccessToken(string userId, string role = "User")
     {
         var claims = new[]
         {
-            new Claim(ClaimTypes.NameIdentifier, userId)
+            new Claim(ClaimTypes.Name, userId),
+            new Claim(ClaimTypes.NameIdentifier, userId),
+            new Claim(ClaimTypes.Role, role),   // Role padrão
+            new Claim("Department", "Finance"), // Claim personalizada
+            new Claim("AccessLevel", "High")    // Outra claim personalizada
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
