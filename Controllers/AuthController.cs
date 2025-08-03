@@ -90,4 +90,22 @@ public class AuthController : ControllerBase
         var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out _);
         return principal;
     }
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet("admin-data")]
+    public IActionResult GetAdminData()
+    {
+        return Ok("Somente Admins podem ver isso.");
+    }
+
+    [Authorize]
+    [HttpGet("profile")]
+    public IActionResult GetProfile()
+    {
+        var username = User.Identity.Name;
+        var department = User.FindFirst("Department")?.Value;
+        var accessLevel = User.FindFirst("AccessLevel")?.Value;
+
+        return Ok(new { username, department, accessLevel });
+    }
 }
